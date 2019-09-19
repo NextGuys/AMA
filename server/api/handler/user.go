@@ -2,17 +2,20 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/NextGuys/AMA/server/api/interfaces"
 	"github.com/NextGuys/AMA/server/api/model"
 	repo "github.com/NextGuys/AMA/server/api/repository"
+	"github.com/NextGuys/AMA/server/api/utils"
+	"github.com/dgrijalva/jwt-go"
 
 	"github.com/jinzhu/gorm"
 
 	"github.com/labstack/echo"
 )
 
-// NewUserRepo Initialize user repository
+// NewUserHandler Initialize user repository
 func NewUserHandler(conn *gorm.DB) *UserHandler {
 	return &UserHandler{
 		repo: interfaces.NewUserRepo(conn),
@@ -24,7 +27,7 @@ type UserHandler struct {
 	repo repo.UserRepo
 }
 
-// Signup sign up
+// SignUp SignUp
 func (h *UserHandler) SignUp(c echo.Context) (err error) {
 	u := &model.User{}
 	if err := c.Bind(u); err != nil {
@@ -38,30 +41,46 @@ func (h *UserHandler) SignUp(c echo.Context) (err error) {
 	return c.JSON(http.StatusCreated, u)
 }
 
-// Login log in
-// func (h *UserHandler) Login(c echo.Context) (err error) {
-// 	u := &model.User{}
-// 	if err = c.Bind(u); err != nil {
-// 		return
-// 	}
-// 	pwd := []byte(u.Password)
+// Create Create
+func (h *UserHandler) Create(c echo.Context) (err error) {
+	s := []model.Skill{}
+	params := &model.UserParams{}
 
-// 	h.Conn.Find(&u, model.User{Name: u.Name})
+	if err = c.Bind(params); err != nil {
+		return
+	}
 
-// 	if utils.ComparePasswords(u.Password, pwd) {
-// 		token := jwt.New(jwt.SigningMethodHS256)
-// 		claims := token.Claims.(jwt.MapClaims)
-// 		claims["admin"] = true
-// 		claims["sub"] = u.UID
-// 		claims["name"] = u.Name
-// 		claims["iat"] = time.Now()
-// 		claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-// 		tokenString, _ := token.SignedString([]byte(Key))
-// 		return c.JSON(http.StatusCreated, tokenString)
-// 	}
+	h.repo.Create(&s, params)
 
-// 	return &echo.HTTPError{Code: http.StatusBadRequest, Message: "invalid email or password"}
-// }
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "invalid email or password"}
+	}
+	return c.JSON(http.StatusCreated, s)
+}
+
+//SignIn log in
+func (h *UserHandler) SignIn(c echo.Context) (err error) {
+	u := &model.User{}
+	if err = c.Bind(u); err != nil {
+		return
+	}
+	pwd := []byte(u.Password)
+
+	h.repo.SignIn(u)
+	if utils.ComparePasswords(u.Password, pwd) {
+		token := jwt.New(jwt.SigningMethodHS256)
+		claims := token.Claims.(jwt.MapClaims)
+		claims["admin"] = true
+		claims["sub"] = u.UID
+		claims["name"] = u.Name
+		claims["iat"] = time.Now()
+		claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+		tokenString, _ := token.SignedString([]byte(Key))
+		return c.JSON(http.StatusCreated, tokenString)
+	}
+
+	return &echo.HTTPError{Code: http.StatusBadRequest, Message: "invalid email or password"}
+}
 
 // // GetUserByID for getting user info by ID
 // func (h *UserHandler) GetUserByID(c echo.Context) (err error) {
