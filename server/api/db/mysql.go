@@ -32,7 +32,7 @@ func New() *gorm.DB {
 
 // Init Migration
 func Init() {
-	db.AutoMigrate(&model.User{}, &model.Message{}, &model.Room{})
+	db.AutoMigrate(&model.User{}, &model.Message{}, &model.Room{}, &model.Skill{})
 	return
 }
 
