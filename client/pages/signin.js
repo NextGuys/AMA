@@ -15,8 +15,10 @@ export default () => {
       email: email,
       password: password
     };
-    await axios.post("http://localhost:8080/signup", data);
-    Router.push("/");
+    await axios.post("http://localhost:8080/signin", data).then(response => {
+      console.log(response);
+      Router.push("/");
+    });
   };
 
   const handleNameChange = e => {
@@ -33,7 +35,7 @@ export default () => {
 
   return (
     <Container>
-      <h1>ユーザー登録</h1>
+      <h1>ログイン</h1>
       <form
         onSubmit={e => {
           handleSubmit(e);
@@ -66,7 +68,7 @@ export default () => {
             handlePasswordChange(e);
           }}
         />
-        <button type="submit">登録する</button>
+        <button type="submit">ログインする</button>
       </form>
     </Container>
   );
