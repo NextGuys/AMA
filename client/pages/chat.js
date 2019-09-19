@@ -1,6 +1,7 @@
 import { Component } from "react";
 import Link from "next/link";
 import fetch from "isomorphic-unfetch";
+import axios from "axios";
 
 class ChatOne extends Component {
   // fetch old messages data from the server
@@ -75,6 +76,7 @@ class ChatOne extends Component {
 
     // send object to WS server
     this.props.socket.emit("message.chat1", message);
+    axios.post("http://localhost:3001/messages", message);
 
     // add it to state and clean current input value
     this.setState(state => ({
