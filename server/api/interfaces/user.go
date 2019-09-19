@@ -48,8 +48,8 @@ func (h *UserRepo) SignUp(u *model.User) error {
 	return nil
 }
 
-// Login Login
-func (h *UserRepo) Login(u *model.User) error {
+// SignIn SignIn
+func (h *UserRepo) SignIn(u *model.User) error {
 
 	// Validate
 	if u.Email == "" || u.Password == "" {
@@ -62,12 +62,24 @@ func (h *UserRepo) Login(u *model.User) error {
 
 	u.UID = uid
 	u.Password = hash
-	if !h.Conn.NewRecord(&u) {
-		panic("could not create new record")
-	}
-	if err := h.Conn.Create(&u).Error; err != nil {
-		panic(err.Error())
-	}
+
+	h.Conn.Find(&u, model.User{Name: u.Name})
+
+	return nil
+}
+
+// Create Create
+func (h *UserRepo) Create(s *[]model.Skill, params *model.UserParams) error {
+	var user model.User
+	var skill model.Skill
+
+	h.Conn.Find(&user, model.User{UID: params.UID})
+	h.Conn.Model(&user).Related(&s, "Skills")
+
+	skill.Name = params.Skill
+
+	h.Conn.Model(&user).Association("Skills").Append(&skill)
+	h.Conn.Model(&user).Association("Skills").Find(&s)
 
 	return nil
 }

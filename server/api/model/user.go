@@ -18,3 +18,9 @@ type User struct {
 
 // Users Slice of User
 var Users []User
+
+// UserParams UserParams
+type UserParams struct {
+	UID   xid.ID `json:"uid"`
+	Skill string `json:"skill"`
+}
