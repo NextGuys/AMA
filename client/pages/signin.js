@@ -4,70 +4,72 @@ import axios from "axios";
 import { Container } from "../components/Container";
 
 export default () => {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async e => {
-    e.preventDefault()
+    e.preventDefault();
     const data = {
       name: name,
       email: email,
       password: password
-    }
-    await axios.post('http://localhost:8080/signup', data)
-    Router.push('/')
-  }
+    };
+    await axios.post("http://localhost:8080/signin", data).then(response => {
+      console.log(response);
+      Router.push("/");
+    });
+  };
 
   const handleNameChange = e => {
-    setName(e.target.value)
-  }
+    setName(e.target.value);
+  };
 
   const handleEmailChange = e => {
-    setEmail(e.target.value)
-  }
+    setEmail(e.target.value);
+  };
 
   const handlePasswordChange = e => {
-    setPassword(e.target.value)
-  }
+    setPassword(e.target.value);
+  };
 
   return (
     <Container>
-      <h1>ユーザー登録</h1>
+      <h1>ログイン</h1>
       <form
         onSubmit={e => {
-          handleSubmit(e)
+          handleSubmit(e);
         }}
       >
         <div>ユーザー名</div>
         <input
-          type='text'
-          name='name'
+          type="text"
+          name="name"
           value={name}
           onChange={e => {
-            handleNameChange(e)
+            handleNameChange(e);
           }}
         />
         <div>メールアドレス</div>
         <input
-          type='text'
-          name='email'
+          type="text"
+          name="email"
           value={email}
           onChange={e => {
-            handleEmailChange(e)
+            handleEmailChange(e);
           }}
         />
         <div>パスワード</div>
         <input
-          type='password'
-          name='password'
+          type="password"
+          name="password"
           value={password}
           onChange={e => {
-            handlePasswordChange(e)
+            handlePasswordChange(e);
           }}
         />
-        <button type='submit'>登録する</button>
+        <button type="submit">ログインする</button>
       </form>
     </Container>
-  )
-}
+  );
+};
