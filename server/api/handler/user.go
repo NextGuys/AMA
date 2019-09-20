@@ -9,6 +9,7 @@ import (
 	repo "github.com/NextGuys/AMA/server/api/repository"
 	"github.com/NextGuys/AMA/server/api/utils"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/rs/xid"
 
 	"github.com/jinzhu/gorm"
 
@@ -40,6 +41,19 @@ func (h *UserHandler) Read(c echo.Context) (err error) {
 	}
 
 	return c.JSON(http.StatusCreated, users)
+}
+
+// SignUp SignUp
+func (h *UserHandler) GetUser(c echo.Context) (err error) {
+	var u model.User
+	var id string
+	uid, _ := xid.FromString(id)
+
+	if err := h.repo.GetUser(&u, uid); err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, u)
 }
 
 // SignUp SignUp
