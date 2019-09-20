@@ -77,13 +77,24 @@ const Form = styled.form`
 
 const name = 'Yukio Orita'
 
-const handleOnChange = e => {
-  setRoomTitle(e.target.value)
-}
-
-// axios.post("http://localhost:8080/")
-
 export default () => {
+  const handleOnChange = e => {
+    setRoomTitle(e.target.value)
+  }
+
+  const handleSubmit = e => {
+    axios.post('http://localhost:8080/rooms', {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNTY5MDM0MzQ4LCJpYXQiOiIyMDE5LTA5LTIwVDExOjUyOjI4LjMzODQ4OSswOTowMCIsIm5hbWUiOiJ5dWtpbyIsInN1YiI6ImJtMjN0a2kzcTU2Mm1nMzJudmZnIn0.ZwaqrkynGbck5h6wJSX20yI95PQ28gaCGE2iXksNUq0
+    `
+      },
+      data: {
+        title: 'sss',
+        uid: 'fregrhjtfghfjgh'
+      }
+    })
+  }
+
   const [roomTitle, setRoomTitle] = useState('')
 
   return (
@@ -105,9 +116,7 @@ export default () => {
         <FlexContainer>
           <Center>
             <Tittle>トークルームのタイトルを入力してください。</Tittle>
-            <Form
-            //  onSubmit={handleSubmit}
-            >
+            <Form onSubmit={handleSubmit}>
               <input
                 onChange={e => {
                   handleOnChange(e)
