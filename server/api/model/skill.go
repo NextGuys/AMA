@@ -7,7 +7,6 @@ import (
 // Skill UserModel
 type Skill struct {
 	gorm.Model
-	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Users []User `gorm:"many2many:user_skills;"`
 }

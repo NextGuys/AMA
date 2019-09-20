@@ -7,7 +7,6 @@ import (
 // Message UserModel
 type Message struct {
 	gorm.Model
-	ID      int    `json:"id"`
 	UserID  int    `json:"user_id"`
 	RoomID  int    `json:"room_id"`
 	Content string `json:"content"`
