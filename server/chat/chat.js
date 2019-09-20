@@ -34,6 +34,19 @@ app.post("/messages", (req, res, next) => {
   res.json({ result: "ok" });
 });
 
+app.get("/messages", (req, res, next) => {
+  const room_id = req;
+  console.log(room_id);
+
+  // simple query
+  // const sql = `SELECT user_id,content FROM messages WHERE room_id=${room_id}`;
+  // connection.query(sql, function(err, results, fields) {
+  //   res.json(results);
+  //   console.log(results); // results contains rows returned by server
+  //   console.log(fields); // fields contains extra meta data about results, if available
+  // });
+});
+
 /* 2. listen()メソッドを実行して3000番ポートで待ち受け。*/
 const server = app.listen(3001, function() {
   console.log("Node.js is listening to PORT:" + server.address().port);

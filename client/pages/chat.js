@@ -3,13 +3,29 @@ import Link from "next/link";
 import fetch from "isomorphic-unfetch";
 import axios from "axios";
 
+if (typeof window !== "undefined") {
+  // クライアントサイドのみで実行したい処理を実装
+  // const token = window.localStorage.getItem("token");
+  // console.log(token);
+}
+
 class ChatOne extends Component {
   // fetch old messages data from the server
-  static async getInitialProps({ req }) {
-    const response = await fetch("http://localhost:3000/messages/chat1");
-    const messages = await response.json();
-    return { messages };
-  }
+
+  // static async getInitialProps({ req }) {
+  //   const data = {
+  //     headers: {
+  //       // Authorization: `Bearer ${token}`
+  //     },
+  //     room_id: "0"
+  //   };
+  //   const messages = await axios
+  //     .get("http://localhost:3001/messages", data)
+  //     .then(response => {
+  //       console.log(response);
+  //     });
+  //   return { messages };
+  // }
 
   static defaultProps = {
     messages: []
@@ -34,6 +50,20 @@ class ChatOne extends Component {
   };
   componentDidMount() {
     this.subscribe();
+    const token = window.localStorage.getItem("token");
+
+    const data = {
+      // headers: {
+      //   Authorization: `Bearer ${token}`
+      // },
+      room_id: "0"
+    };
+
+    (async () => {
+      await axios.get("http://localhost:3001/messages", data).then(response => {
+        messages = response;
+      });
+    })();
   }
 
   componentDidUpdate() {
