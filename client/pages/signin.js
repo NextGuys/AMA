@@ -17,7 +17,7 @@ export default () => {
     };
     await axios.post("http://localhost:8080/signin", data).then(response => {
       window.localStorage.setItem("token", response.data);
-      Router.push("/");
+      Router.push("/home");
     });
   };
 

@@ -100,3 +100,19 @@ func (h *UserRepo) Read(users *[]model.User) error {
 
 	return nil
 }
+
+func (h *UserRepo) GetUser(u *model.User, uid xid.ID) error {
+	//var skill model.Skill
+
+	h.Conn.First(&u, model.User{UID: uid})
+
+	// h.Conn.Find(&user, model.User{UID: params.UID})
+	// h.Conn.Model(&user).Related(&s, "Skills")
+
+	// skill.Name = params.Skill
+
+	// h.Conn.Model(&user).Association("Skills").Append(&skill)
+	// h.Conn.Model(&user).Association("Skills").Find(&s)
+
+	return nil
+}

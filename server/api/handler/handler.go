@@ -27,6 +27,7 @@ func InitializeRouter(db *gorm.DB, e *echo.Echo) *echo.Echo {
 	r := NewRoomHandler(db)
 	// User
 	e.GET("/users", u.Read)
+	e.GET("/users/:id", u.GetUser)
 	e.POST("/signup", u.SignUp)
 	e.POST("/signin", u.SignIn)
 	e.POST("/skills", u.Create)
