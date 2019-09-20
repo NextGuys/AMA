@@ -1,13 +1,13 @@
-import React from 'react'
-import Header from '../components/Header'
+import React, { useState } from "react";
+import Header from "../components/Header";
 import {
   RightContainer,
   LeftContainer,
   Container
-} from '../components/Container'
-import styled from 'styled-components'
-import Link from 'next/link'
-import Axios from 'axios'
+} from "../components/Container";
+import styled from "styled-components";
+import Link from "next/link";
+import axios from "axios";
 
 const Text = styled.div`
   margin: 5px 5px 5px 5px;
@@ -23,7 +23,7 @@ const Text = styled.div`
   -webkit-transition: 0.4s;
   transition: 0.4s;
   padding: 10px 10px 10px 10px;
-`
+`;
 
 const SkillText = styled.div`
   margin: 5px 5px 5px 5px;
@@ -39,16 +39,16 @@ const SkillText = styled.div`
   -webkit-transition: 0.4s;
   transition: 0.4s;
   padding: 10px 10px 10px 10px;
-`
+`;
 
 const TextBody = styled.div`
   display: flex;
-`
+`;
 
 const Form = styled.form`
   margin: 20px;
   text-align: center;
-`
+`;
 
 const Card = styled.div`
   margin: 10px;
@@ -56,29 +56,42 @@ const Card = styled.div`
   transition: 0.3s;
   border-radius: 5px;
   background-color: #ffffff;
-`
+`;
 
 const CardContainer = styled.div`
   padding: 12px 16px;
-`
+`;
 
 const Input = styled.input`
   margin: 10px;
-`
+`;
 
-const skills = ['React', 'Go']
+const skills = ["React", "Go"];
 
 export default () => {
-  // axiosでname,title,usersを取得する。
-  Axios.get('http://localhost:8080/users', {}).then(res => {
-    const name = res.name
-    const users = res.users
-  })
+  const [users, setUsers] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
-  Axios.get('http://localhost:8080/rooms'),
-  {}.then(res => {
-    const titles = res.titles
-  })
+  axios
+    .get("http://localhost:8080/users", {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNTY5MDM0MzQ4LCJpYXQiOiIyMDE5LTA5LTIwVDExOjUyOjI4LjMzODQ4OSswOTowMCIsIm5hbWUiOiJ5dWtpbyIsInN1YiI6ImJtMjN0a2kzcTU2Mm1nMzJudmZnIn0.ZwaqrkynGbck5h6wJSX20yI95PQ28gaCGE2iXksNUq0`
+      }
+    })
+    .then(res => {
+      setUsers(res.data);
+    });
+
+  axios
+    .get("http://localhost:8080/rooms", {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNTY5MDM0MzQ4LCJpYXQiOiIyMDE5LTA5LTIwVDExOjUyOjI4LjMzODQ4OSswOTowMCIsIm5hbWUiOiJ5dWtpbyIsInN1YiI6ImJtMjN0a2kzcTU2Mm1nMzJudmZnIn0.ZwaqrkynGbck5h6wJSX20yI95PQ28gaCGE2iXksNUq0`
+      }
+    })
+    .then(res => {
+      setRooms(res.data);
+      console.log(res.data);
+    });
 
   return (
     <>
@@ -88,52 +101,54 @@ export default () => {
           <Form>
             <label>検索</label>
             <div>
-              <Input type='text' name='name' />
-              <Input type='submit' value='Submit' />
+              <Input type="text" name="name" />
+              <Input type="submit" value="Submit" />
             </div>
           </Form>
 
-          {titles.map(title => {
-            return (
-              <Link href='/chat'>
-                <Card>
-                  <CardContainer>
-                    <h4>
-                      <b>{title}</b>
-                    </h4>
-                    <TextBody>
-                      {name.map(name => {
-                        return <Text>{name}</Text>
-                      })}
-                    </TextBody>
-                  </CardContainer>
-                </Card>
-              </Link>
-            )
-          })}
+          {rooms &&
+            rooms.map(room => {
+              return (
+                <Link href="/chat" key={room.id}>
+                  <Card>
+                    <CardContainer>
+                      <h4>
+                        <b>{room.title}</b>
+                      </h4>
+                      <TextBody>
+                        {/* {name.map(name => {
+                        return <Text>{name}</Text>;
+                      })} */}
+                      </TextBody>
+                    </CardContainer>
+                  </Card>
+                </Link>
+              );
+            })}
         </LeftContainer>
 
         <RightContainer>
-          {users.map(users => {
-            return (
-              <Link href='/profile'>
-                <Card>
-                  <CardContainer>
-                    <h4>
-                      <b>{users}</b>
-                    </h4>
-                    <TextBody>
-                      {skills.map(skills => {
-                        return <SkillText>{skills}</SkillText>
-                      })}
-                    </TextBody>
-                  </CardContainer>
-                </Card>
-              </Link>
-            )
-          })}
+          {users &&
+            users.map(user => {
+              return (
+                <Link href="/profile" key={user.id}>
+                  <Card>
+                    <CardContainer>
+                      <h4>
+                        <b>{user.name}</b>
+                      </h4>
+                      <TextBody>
+                        {skills.map(skills => {
+                          return <SkillText>{skills}</SkillText>;
+                        })}
+                      </TextBody>
+                    </CardContainer>
+                  </Card>
+                </Link>
+              );
+            })}
         </RightContainer>
       </Container>
     </>
-  )
-}
+  );
+};
