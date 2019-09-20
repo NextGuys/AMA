@@ -3,65 +3,41 @@ import Link from "next/link";
 import fetch from "isomorphic-unfetch";
 import axios from "axios";
 
-if (typeof window !== "undefined") {
-  // クライアントサイドのみで実行したい処理を実装
-  // const token = window.localStorage.getItem("token");
-  // console.log(token);
-}
-
 class ChatOne extends Component {
-  // fetch old messages data from the server
-
-  // static async getInitialProps({ req }) {
-  //   const data = {
-  //     headers: {
-  //       // Authorization: `Bearer ${token}`
-  //     },
-  //     room_id: "0"
-  //   };
-  //   const messages = await axios
-  //     .get("http://localhost:3001/messages", data)
-  //     .then(response => {
-  //       console.log(response);
-  //     });
-  //   return { messages };
-  // }
-
-  static defaultProps = {
-    messages: []
-  };
-
   // init state with the prefetched messages
-  state = {
-    field: "",
-    newMessage: 0,
-    messages: this.props.messages,
-    subscribe: false,
-    subscribed: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      field: "",
+      newMessage: 0,
+      messages: [],
+      subscribe: false,
+      subscribed: false
+    };
+  }
 
   subscribe = () => {
     if (this.state.subscribe && !this.state.subscribed) {
       // connect to WS server and listen event
       this.props.socket.on("message.chat1", this.handleMessage);
-      this.props.socket.on("message.chat2", this.handleOtherMessage);
       this.setState({ subscribed: true });
     }
   };
+
   componentDidMount() {
     this.subscribe();
     const token = window.localStorage.getItem("token");
 
     const data = {
-      // headers: {
-      //   Authorization: `Bearer ${token}`
-      // },
-      room_id: "0"
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      params: { room_id: "0" }
     };
 
     (async () => {
       await axios.get("http://localhost:3001/messages", data).then(response => {
-        messages = response;
+        this.setState({ messages: response.data });
       });
     })();
   }
@@ -78,7 +54,6 @@ class ChatOne extends Component {
   // close socket connection
   componentWillUnmount() {
     this.props.socket.off("message.chat1", this.handleMessage);
-    this.props.socket.off("message.chat2", this.handleOtherMessage);
   }
 
   // add messages from server to the state
@@ -98,10 +73,15 @@ class ChatOne extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
+    const token = window.localStorage.getItem("token");
+
     // create message object
     const message = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
       id: new Date().getTime(),
-      value: this.state.field
+      content: this.state.field
     };
 
     // send object to WS server
@@ -133,8 +113,11 @@ class ChatOne extends Component {
           <ul>
             {this.state.messages.map(message => (
               <li key={message.id}>
-                <div>ユーザー名が入ります</div>
-                {message.value}
+                <div>
+                  {message.user_id}
+                  {axios.get("http://localhost:8080/users")}
+                </div>
+                {message.content}
               </li>
             ))}
           </ul>

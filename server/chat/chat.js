@@ -22,29 +22,21 @@ const connection = mysql.createConnection({
 });
 
 app.post("/messages", (req, res, next) => {
-  const message = req.body.value;
+  const message = req.body.content;
 
-  // simple query
   const sql = `INSERT INTO messages (user_id, room_id, content) VALUES (0, 0, "${message}")`;
-  connection.query(sql, function(err, results, fields) {
-    console.log(results); // results contains rows returned by server
-    console.log(fields); // fields contains extra meta data about results, if available
-  });
+  connection.query(sql, function(err, results, fields) {});
 
   res.json({ result: "ok" });
 });
 
 app.get("/messages", (req, res, next) => {
-  const room_id = req;
-  console.log(room_id);
+  const room_id = req.query.room_id;
 
-  // simple query
-  // const sql = `SELECT user_id,content FROM messages WHERE room_id=${room_id}`;
-  // connection.query(sql, function(err, results, fields) {
-  //   res.json(results);
-  //   console.log(results); // results contains rows returned by server
-  //   console.log(fields); // fields contains extra meta data about results, if available
-  // });
+  const sql = `SELECT id,user_id,content FROM messages WHERE room_id=${room_id}`;
+  connection.query(sql, function(err, results, fields) {
+    res.json(results);
+  });
 });
 
 /* 2. listen()メソッドを実行して3000番ポートで待ち受け。*/
