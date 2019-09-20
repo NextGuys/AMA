@@ -24,10 +24,13 @@ const (
 func InitializeRouter(db *gorm.DB, e *echo.Echo) *echo.Echo {
 	// h := &Handler{DB: db}
 	u := NewUserHandler(db)
-	// Auth
+	r := NewRoomHandler(db)
+	// User
 	e.POST("/signup", u.SignUp)
 	e.POST("/signin", u.SignIn)
 	e.POST("/skills", u.Create)
+	// Room
+	e.POST("/rooms", r.Create)
 	// // User
 	// e.GET("/users/:id", u.GetUserByID)
 	// // Tag
