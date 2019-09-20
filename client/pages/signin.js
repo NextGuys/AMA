@@ -16,7 +16,7 @@ export default () => {
       password: password
     };
     await axios.post("http://localhost:8080/signin", data).then(response => {
-      console.log(response);
+      window.localStorage.setItem("token", response.data);
       Router.push("/home");
     });
   };

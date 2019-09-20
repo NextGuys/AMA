@@ -19,7 +19,7 @@ func New() *gorm.DB {
 	d := &mysql{
 		Host:     "localhost",
 		Username: "root",
-		Password: "",
+		Password: "password",
 		DBName:   "ama",
 	}
 	conn, err := gorm.Open("mysql", d.Username+":"+d.Password+"@tcp("+d.Host+")/"+d.DBName+"?charset=utf8&parseTime=True&loc=Local")
