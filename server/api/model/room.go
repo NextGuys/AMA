@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/jinzhu/gorm"
+	"github.com/rs/xid"
 )
 
 // Room UserModel
@@ -15,3 +16,8 @@ type Room struct {
 
 // Rooms List user
 var Rooms []Room
+
+type RoomParams struct {
+	UID   xid.ID `json:"uid"`
+	Title string `json:"title"`
+}

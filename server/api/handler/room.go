@@ -2,13 +2,10 @@ package handler
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/NextGuys/AMA/server/api/interfaces"
 	"github.com/NextGuys/AMA/server/api/model"
 	repo "github.com/NextGuys/AMA/server/api/repository"
-	"github.com/NextGuys/AMA/server/api/utils"
-	"github.com/dgrijalva/jwt-go"
 
 	"github.com/jinzhu/gorm"
 
@@ -16,86 +13,50 @@ import (
 )
 
 // NewUserHandler Initialize user repository
-func NewUserHandler(conn *gorm.DB) *UserHandler {
-	return &UserHandler{
-		repo: interfaces.NewUserRepo(conn),
+func NewRoomHandler(conn *gorm.DB) *RoomHandler {
+	return &RoomHandler{
+		repo: interfaces.NewRoomRepo(conn),
 	}
 }
 
 // UserHandler Handler with DB
-type UserHandler struct {
-	repo repo.UserRepo
-}
-
-// SignUp SignUp
-func (h *UserHandler) Read(c echo.Context) (err error) {
-	var u model.User
-	users := &[]model.User{}
-	if err := c.Bind(u); err != nil {
-		return err
-	}
-
-	if err := h.repo.Read(users); err != nil {
-		return err
-	}
-
-	return c.JSON(http.StatusCreated, users)
-}
-
-// SignUp SignUp
-func (h *UserHandler) SignUp(c echo.Context) (err error) {
-	u := &model.User{}
-	if err := c.Bind(u); err != nil {
-		return err
-	}
-
-	if err := h.repo.SignUp(u); err != nil {
-		return err
-	}
-
-	return c.JSON(http.StatusCreated, u)
+type RoomHandler struct {
+	repo repo.RoomRepo
 }
 
 // Create Create
-func (h *UserHandler) Create(c echo.Context) (err error) {
-	s := []model.Skill{}
-	params := &model.UserParams{}
+func (h *RoomHandler) Create(c echo.Context) (err error) {
+	r := []model.Room{}
+	params := &model.RoomParams{}
 
 	if err = c.Bind(params); err != nil {
 		return
 	}
 
-	h.repo.Create(&s, params)
+	h.repo.Create(params)
 
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "invalid email or password"}
 	}
-	return c.JSON(http.StatusCreated, s)
+	return c.JSON(http.StatusCreated, r)
+}
+
+// SignUp SignUp
+func (h *RoomHandler) Read(c echo.Context) (err error) {
+	var r model.Room
+	rooms := &[]model.Room{}
+	if err := c.Bind(r); err != nil {
+		return err
+	}
+
+	if err := h.repo.Read(rooms); err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, rooms)
 }
 
 //SignIn log in
-func (h *UserHandler) SignIn(c echo.Context) (err error) {
-	u := &model.User{}
-	if err = c.Bind(u); err != nil {
-		return
-	}
-	pwd := []byte(u.Password)
-
-	h.repo.SignIn(u)
-	if utils.ComparePasswords(u.Password, pwd) {
-		token := jwt.New(jwt.SigningMethodHS256)
-		claims := token.Claims.(jwt.MapClaims)
-		claims["admin"] = true
-		claims["sub"] = u.UID
-		claims["name"] = u.Name
-		claims["iat"] = time.Now()
-		claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-		tokenString, _ := token.SignedString([]byte(Key))
-		return c.JSON(http.StatusCreated, tokenString)
-	}
-
-	return &echo.HTTPError{Code: http.StatusBadRequest, Message: "invalid email or password"}
-}
 
 // // GetUserByID for getting user info by ID
 // func (h *UserHandler) GetUserByID(c echo.Context) (err error) {
