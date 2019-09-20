@@ -41,6 +41,21 @@ func (h *RoomHandler) Create(c echo.Context) (err error) {
 	return c.JSON(http.StatusCreated, r)
 }
 
+// SignUp SignUp
+func (h *RoomHandler) Read(c echo.Context) (err error) {
+	var r model.Room
+	rooms := &[]model.Room{}
+	if err := c.Bind(r); err != nil {
+		return err
+	}
+
+	if err := h.repo.Read(rooms); err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, rooms)
+}
+
 //SignIn log in
 
 // // GetUserByID for getting user info by ID

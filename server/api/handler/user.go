@@ -28,6 +28,21 @@ type UserHandler struct {
 }
 
 // SignUp SignUp
+func (h *UserHandler) Read(c echo.Context) (err error) {
+	var u model.User
+	users := &[]model.User{}
+	if err := c.Bind(u); err != nil {
+		return err
+	}
+
+	if err := h.repo.Read(users); err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, users)
+}
+
+// SignUp SignUp
 func (h *UserHandler) SignUp(c echo.Context) (err error) {
 	u := &model.User{}
 	if err := c.Bind(u); err != nil {
