@@ -7,6 +7,7 @@ import {
 } from '../components/Container'
 import styled from 'styled-components'
 import Link from 'next/link'
+import Axios from 'axios'
 
 const Text = styled.div`
   margin: 5px 5px 5px 5px;
@@ -61,19 +62,23 @@ const CardContainer = styled.div`
   padding: 12px 16px;
 `
 
-const name = ['Yukio Orita', 'Shogo Yasuda']
-const titles = ['React Hooksについて', '【質問】Atomic Design']
-const users = [
-  'Yukio Orita',
-  'Shogo Yasuda',
-  'Katsuhito Karube',
-  'Nobuo Orita',
-  'Maruko Orita'
-]
+const Input = styled.input`
+  margin: 10px;
+`
+
 const skills = ['React', 'Go']
 
 export default () => {
   // axiosでname,title,usersを取得する。
+  Axios.get('http://localhost:8080/users', {}).then(res => {
+    const name = res.name
+    const users = res.users
+  })
+
+  Axios.get('http://localhost:8080/rooms'),
+  {}.then(res => {
+    const titles = res.titles
+  })
 
   return (
     <>
@@ -83,8 +88,8 @@ export default () => {
           <Form>
             <label>検索</label>
             <div>
-              <input type='text' name='name' />
-              <input type='submit' value='Submit' />
+              <Input type='text' name='name' />
+              <Input type='submit' value='Submit' />
             </div>
           </Form>
 
