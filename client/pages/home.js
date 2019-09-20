@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import {
   RightContainer,
@@ -72,27 +72,30 @@ export default () => {
   const [users, setUsers] = useState([]);
   const [rooms, setRooms] = useState([]);
 
-  axios
-    .get("http://localhost:8080/users", {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNTY5MDM0MzQ4LCJpYXQiOiIyMDE5LTA5LTIwVDExOjUyOjI4LjMzODQ4OSswOTowMCIsIm5hbWUiOiJ5dWtpbyIsInN1YiI6ImJtMjN0a2kzcTU2Mm1nMzJudmZnIn0.ZwaqrkynGbck5h6wJSX20yI95PQ28gaCGE2iXksNUq0`
-      }
-    })
-    .then(res => {
-      setUsers(res.data);
-    });
+  useEffect(() => {
+    if (users.length === 0) {
+      axios
+        .get("http://localhost:8080/users", {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNTY5MDM0MzQ4LCJpYXQiOiIyMDE5LTA5LTIwVDExOjUyOjI4LjMzODQ4OSswOTowMCIsIm5hbWUiOiJ5dWtpbyIsInN1YiI6ImJtMjN0a2kzcTU2Mm1nMzJudmZnIn0.ZwaqrkynGbck5h6wJSX20yI95PQ28gaCGE2iXksNUq0`
+          }
+        })
+        .then(res => {
+          setUsers(res.data);
+        });
 
-  axios
-    .get("http://localhost:8080/rooms", {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNTY5MDM0MzQ4LCJpYXQiOiIyMDE5LTA5LTIwVDExOjUyOjI4LjMzODQ4OSswOTowMCIsIm5hbWUiOiJ5dWtpbyIsInN1YiI6ImJtMjN0a2kzcTU2Mm1nMzJudmZnIn0.ZwaqrkynGbck5h6wJSX20yI95PQ28gaCGE2iXksNUq0`
-      }
-    })
-    .then(res => {
-      setRooms(res.data);
-      console.log(res.data);
-    });
-
+      axios
+        .get("http://localhost:8080/rooms", {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNTY5MDM0MzQ4LCJpYXQiOiIyMDE5LTA5LTIwVDExOjUyOjI4LjMzODQ4OSswOTowMCIsIm5hbWUiOiJ5dWtpbyIsInN1YiI6ImJtMjN0a2kzcTU2Mm1nMzJudmZnIn0.ZwaqrkynGbck5h6wJSX20yI95PQ28gaCGE2iXksNUq0`
+          }
+        })
+        .then(res => {
+          setRooms(res.data);
+          console.log(res.data);
+        });
+    }
+  });
   return (
     <>
       <Header>AMA</Header>

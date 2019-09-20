@@ -2,6 +2,7 @@ import { Component } from "react";
 import Link from "next/link";
 import fetch from "isomorphic-unfetch";
 import axios from "axios";
+import Header from "../components/Header";
 
 class ChatOne extends Component {
   // init state with the prefetched messages
@@ -97,41 +98,33 @@ class ChatOne extends Component {
 
   render() {
     return (
-      <main>
-        <div>
-          <Link href={"/"}>
-            <a>{"Chat One"}</a>
-          </Link>
-          <br />
-          <Link href={"/clone"}>
-            <a>{`Chat Two ${
-              this.state.newMessage > 0
-                ? `( ${this.state.newMessage} new message )`
-                : ""
-            }`}</a>
-          </Link>
-          <ul>
-            {this.state.messages.map(message => (
-              <li key={message.id}>
-                <div>
-                  {message.user_id}
-                  {axios.get("http://localhost:8080/users")}
-                </div>
-                {message.content}
-              </li>
-            ))}
-          </ul>
-          <form onSubmit={e => this.handleSubmit(e)}>
-            <input
-              onChange={this.handleChange}
-              type="text"
-              placeholder="Hello world!"
-              value={this.state.field}
-            />
-            <button>Send</button>
-          </form>
-        </div>
-      </main>
+      <>
+        <Header>Ask Me Anything</Header>
+        <main>
+          <div>
+            <Link href="/home">
+              <a>他のルームへ</a>
+            </Link>
+            <ul>
+              {this.state.messages.map((message, index) => (
+                <li key={index}>
+                  <div>ユーザー名が入ります</div>
+                  {message.content}
+                </li>
+              ))}
+            </ul>
+            <form onSubmit={e => this.handleSubmit(e)}>
+              <input
+                onChange={this.handleChange}
+                type="text"
+                placeholder="メッセージを入力"
+                value={this.state.field}
+              />
+              <button>投稿</button>
+            </form>
+          </div>
+        </main>
+      </>
     );
   }
 }
