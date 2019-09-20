@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../components/Header'
 import styled from 'styled-components'
 import Link from 'next/link'
+import axios from 'axios'
 
 const Button = styled.button`
   width: 150px;
@@ -47,6 +48,18 @@ const Text = styled.div`
   padding: 10px 10px 10px 10px;
 `
 
+const Tittle = styled.div`
+  margin: 5px 5px 5px 5px;
+  text-decoration: none;
+  text-align: center;
+  overflow: hidden;
+  font-weight: bold;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  padding: 10px 10px 10px 10px;
+  width: 135px;
+`
+
 const Center = styled.div`
   margin: 0 auto;
 `
@@ -58,31 +71,56 @@ const Name = styled.text`
   color: #353b41;
 `
 
+const Form = styled.form`
+  margin-left: 20px;
+`
+
 const name = 'Yukio Orita'
 
-export default () => (
-  <>
-    <Header>Profile</Header>
-    <Container>
-      <Card>
-        <CardContainer>
-          <Name>
-            <b>{name}</b>
-          </Name>
-          {/* <TextBody>
+const handleOnChange = e => {
+  setRoomTitle(e.target.value)
+}
+
+// axios.post("http://localhost:8080/")
+
+export default () => {
+  const [roomTitle, setRoomTitle] = useState('')
+
+  return (
+    <>
+      <Header>Profile</Header>
+      <Container>
+        <Card>
+          <CardContainer>
+            <Name>
+              <b>{name}</b>
+            </Name>
+            {/* <TextBody>
             {/* {name.map(name => {
               return <Text>{name}</Text>
             })} */}
-          {/* </TextBody>  */}
-        </CardContainer>
-      </Card>
-      <FlexContainer>
-        <Center>
-          <Link href='/chat'>
-            <Button>会話する</Button>
-          </Link>
-        </Center>
-      </FlexContainer>
-    </Container>
-  </>
-)
+            {/* </TextBody>  */}
+          </CardContainer>
+        </Card>
+        <FlexContainer>
+          <Center>
+            <Tittle>トークルームのタイトルを入力してください。</Tittle>
+            <Form
+            //  onSubmit={handleSubmit}
+            >
+              <input
+                onChange={e => {
+                  handleOnChange(e)
+                }}
+                value={roomTitle}
+              />
+              <Link href='/chat'>
+                <Button type='submit'>会話する</Button>
+              </Link>
+            </Form>
+          </Center>
+        </FlexContainer>
+      </Container>
+    </>
+  )
+}
