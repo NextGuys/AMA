@@ -72,59 +72,63 @@ const users = [
 ]
 const skills = ['React', 'Go']
 
-export default () => (
-  <>
-    <Header>AMA</Header>
-    <Container>
-      <LeftContainer>
-        <Form>
-          <label>検索</label>
-          <div>
-            <input type='text' name='name' />
-            <input type='submit' value='Submit' />
-          </div>
-        </Form>
+export default () => {
+  // axiosでname,title,usersを取得する。
 
-        {titles.map(title => {
-          return (
-            <Link href='/chat'>
-              <Card>
-                <CardContainer>
-                  <h4>
-                    <b>{title}</b>
-                  </h4>
-                  <TextBody>
-                    {name.map(name => {
-                      return <Text>{name}</Text>
-                    })}
-                  </TextBody>
-                </CardContainer>
-              </Card>
-            </Link>
-          )
-        })}
-      </LeftContainer>
+  return (
+    <>
+      <Header>AMA</Header>
+      <Container>
+        <LeftContainer>
+          <Form>
+            <label>検索</label>
+            <div>
+              <input type='text' name='name' />
+              <input type='submit' value='Submit' />
+            </div>
+          </Form>
 
-      <RightContainer>
-        {users.map(users => {
-          return (
-            <Link href='/profile'>
-              <Card>
-                <CardContainer>
-                  <h4>
-                    <b>{users}</b>
-                  </h4>
-                  <TextBody>
-                    {skills.map(skills => {
-                      return <SkillText>{skills}</SkillText>
-                    })}
-                  </TextBody>
-                </CardContainer>
-              </Card>
-            </Link>
-          )
-        })}
-      </RightContainer>
-    </Container>
-  </>
-)
+          {titles.map(title => {
+            return (
+              <Link href='/chat'>
+                <Card>
+                  <CardContainer>
+                    <h4>
+                      <b>{title}</b>
+                    </h4>
+                    <TextBody>
+                      {name.map(name => {
+                        return <Text>{name}</Text>
+                      })}
+                    </TextBody>
+                  </CardContainer>
+                </Card>
+              </Link>
+            )
+          })}
+        </LeftContainer>
+
+        <RightContainer>
+          {users.map(users => {
+            return (
+              <Link href='/profile'>
+                <Card>
+                  <CardContainer>
+                    <h4>
+                      <b>{users}</b>
+                    </h4>
+                    <TextBody>
+                      {skills.map(skills => {
+                        return <SkillText>{skills}</SkillText>
+                      })}
+                    </TextBody>
+                  </CardContainer>
+                </Card>
+              </Link>
+            )
+          })}
+        </RightContainer>
+      </Container>
+    </>
+  )
+}
